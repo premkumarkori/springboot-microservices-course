@@ -12,6 +12,7 @@
         <module>ProductService</module>
         <module>eureka-server</module>
         <module>OrderService</module>
+        <module>ConfigServer</module>
     </modules>
 
     <name>springboot-microservices-course</name>
