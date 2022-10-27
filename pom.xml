@@ -14,6 +14,7 @@
         <module>OrderService</module>
         <module>ConfigServer</module>
         <module>Clients</module>
+        <module>PaymentService</module>
     </modules>
 
     <name>springboot-microservices-course</name>
