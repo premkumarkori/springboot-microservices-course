@@ -67,4 +67,19 @@ public class ProductController {
         productService.deleteProductById(productId);
     }
 
+    @PutMapping("/reduceQuantity/{id}")
+    @Operation(summary = "This is to Update Products in Db whenever an Order is Placed")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Update the Products By Quantity in Db",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404",
+                    description = "Product Not Available",
+                    content = @Content)
+    })
+    public ResponseEntity<Void> reduceQuantity(@PathVariable("id") long productId,
+                                               @RequestParam long quantity) {
+        productService.reduceQuantity(productId, quantity);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

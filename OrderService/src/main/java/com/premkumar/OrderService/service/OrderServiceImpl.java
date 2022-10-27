@@ -3,6 +3,7 @@ package com.premkumar.OrderService.service;
 import com.premkumar.OrderService.entity.Order;
 import com.premkumar.OrderService.model.OrderRequest;
 import com.premkumar.OrderService.repository.OrderRepository;
+import com.premkumar.clients.productservice.ProductClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ import java.time.Instant;
 public class OrderServiceImpl implements OrderService {
 
     private OrderRepository orderRepository;
+    private final ProductClient productClient;
+//    @Autowired
+//
 
     @Override
     public long placeOrder(OrderRequest orderRequest) {
@@ -23,6 +27,8 @@ public class OrderServiceImpl implements OrderService {
         //Payment Service -> Payments -> Success-> COMPLETE, Else
         //CANCELLED
         log.info("Placing Order Request: {}", orderRequest);
+
+        productClient.reduceQuantity(orderRequest.getProductId(), orderRequest.getQuantity());
 
         log.info("Creating Order with Status CREATED");
         Order order = Order.builder()
