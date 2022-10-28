@@ -1,7 +1,10 @@
 package com.premkumar.PaymentService.service;
 
 import com.premkumar.PaymentService.entity.TransactionDetails;
+import com.premkumar.PaymentService.exception.PaymentServiceCustomException;
+import com.premkumar.PaymentService.model.PaymentMode;
 import com.premkumar.PaymentService.model.PaymentRequest;
+import com.premkumar.PaymentService.model.PaymentResponse;
 import com.premkumar.PaymentService.repository.TransactionDetailsRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,5 +38,27 @@ public class PaymentServiceImpl implements PaymentService {
         log.info("Transaction Completed with Id: {}", transactionDetails.getId());
 
         return transactionDetails.getId();
+    }
+
+    @Override
+    public PaymentResponse getPaymentDetailsByOrderId(String orderId) {
+        log.info("Getting payment details for the Order Id: {}", orderId);
+
+        TransactionDetails transactionDetails
+                = transactionDetailsRepository.findByOrderId(Long.parseLong(orderId))
+                .orElseThrow(() -> new PaymentServiceCustomException(
+                        "TransactionDetails with given id not found",
+                        "TRANSACTION_NOT_FOUND"));
+
+        PaymentResponse paymentResponse
+                = PaymentResponse.builder()
+                .paymentId(transactionDetails.getId())
+                .amount(transactionDetails.getAmount())
+                .orderId(transactionDetails.getOrderId())
+                .paymentDate(transactionDetails.getPaymentDate())
+                .paymentMode(PaymentMode.valueOf(transactionDetails.getPaymentMode()))
+                .status(transactionDetails.getPaymentStatus())
+                .build();
+        return paymentResponse;
     }
 }

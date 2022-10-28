@@ -1,4 +1,4 @@
-package com.premkumar.OrderService.model;
+package com.premkumar.clients.paymentservice;
 
 public enum PaymentMode {
     CASH,

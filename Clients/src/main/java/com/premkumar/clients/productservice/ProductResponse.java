@@ -1,20 +1,18 @@
-package com.premkumar.OrderService.model;
+package com.premkumar.clients.productservice;
 
-
-import com.premkumar.clients.paymentservice.PaymentMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class OrderRequest {
+public class ProductResponse {
 
+    private String productName;
     private long productId;
-    private long totalAmount;
     private long quantity;
-    private PaymentMode paymentMode;
+    private long price;
 }

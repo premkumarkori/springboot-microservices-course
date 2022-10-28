@@ -1,6 +1,7 @@
 package com.premkumar.OrderService.controller;
 
 import com.premkumar.OrderService.model.OrderRequest;
+import com.premkumar.OrderService.model.OrderResponse;
 import com.premkumar.OrderService.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,10 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/orders")
@@ -39,4 +37,20 @@ public class OrderController {
         return new ResponseEntity<>(orderId, HttpStatus.OK);
     }
 
+    @GetMapping("/{orderId}")
+    @Operation(summary = "This is to Get OrderDetails from Db")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Get OrderDetails from Db",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404",
+                    description = "NOT FOUND",
+                    content = @Content)
+    })
+    public ResponseEntity<OrderResponse> getOrderDetails(@PathVariable long orderId) {
+        OrderResponse orderResponse
+                = orderService.getOrderDetails(orderId);
+
+        return new ResponseEntity<>(orderResponse, HttpStatus.OK);
+    }
 }
