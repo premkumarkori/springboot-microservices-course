@@ -15,6 +15,7 @@
         <module>ConfigServer</module>
         <module>Clients</module>
         <module>PaymentService</module>
+        <module>APIGW</module>
     </modules>
 
     <name>springboot-microservices-course</name>

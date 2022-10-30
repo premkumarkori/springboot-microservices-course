@@ -1,0 +1,50 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: APIGW
+  config:
+    import: configserver:http://localhost:9296
+  cloud:
+    gateway:
+      routes:
+        - id: orderservice
+          uri: lb://orderservice
+          predicates:
+            - Path=/orders/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: orderservice
+                fallbackuri: forward:/orderServiceFallBack
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 1
+        - id: paymentservice
+          uri: lb://paymentservice
+          predicates:
+            - Path=/payments/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: paymentservice
+                fallbackuri: forward:/paymentServiceFallBack
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 1
+        - id: productservice
+          uri: lb://productservice
+          predicates:
+            - Path=/products/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: productservice
+                fallbackuri: forward:/productServiceFallBack
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 1
