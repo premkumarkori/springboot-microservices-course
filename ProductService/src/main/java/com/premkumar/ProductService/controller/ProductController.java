@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,7 @@ public class ProductController {
 
     private ProductService productService;
 
+    @PreAuthorize("hasAuthority('Admin')")
     @PostMapping
     @Operation(summary = "This is to Post Products in Db By Admin")
     @ApiResponses(value = {
@@ -37,6 +39,7 @@ public class ProductController {
         return new ResponseEntity<>(productId, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('Admin') || hasAuthority('Customer') || hasAuthority('SCOPE_internal')")
     @GetMapping("/{id}")
     @Operation(summary = "This is to Get Products in Db By Admin")
     @ApiResponses(value = {

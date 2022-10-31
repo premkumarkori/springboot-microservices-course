@@ -1,4 +1,4 @@
-package com.premkumar.OrderService.security;
+package com.premkumar.ProductService.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,16 +13,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityWebFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests(
                         authorizeRequest -> authorizeRequest
                                 .anyRequest()
-                                .authenticated()
-                )
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+                                .authenticated())
+                .oauth2ResourceServer(
+                        OAuth2ResourceServerConfigurer::jwt);
 
         return http.build();
     }

@@ -11,7 +11,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 public class OktaOAuth2WebSecurity {
 
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+    public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
         http
                 .authorizeExchange()
                 .anyExchange().authenticated()
@@ -20,7 +20,6 @@ public class OktaOAuth2WebSecurity {
                 .and()
                 .oauth2ResourceServer()
                 .jwt();
-
         return http.build();
     }
 }

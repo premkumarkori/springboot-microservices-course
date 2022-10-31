@@ -22,19 +22,6 @@ spring:
               args:
                 redis-rate-limiter.replenishRate: 1
                 redis-rate-limiter.burstCapacity: 1
-        - id: paymentservice
-          uri: lb://paymentservice
-          predicates:
-            - Path=/payments/**
-          filters:
-            - name: CircuitBreaker
-              args:
-                name: paymentservice
-                fallbackuri: forward:/paymentServiceFallBack
-            - name: RequestRateLimiter
-              args:
-                redis-rate-limiter.replenishRate: 1
-                redis-rate-limiter.burstCapacity: 1
         - id: productservice
           uri: lb://productservice
           predicates:
@@ -44,6 +31,19 @@ spring:
               args:
                 name: productservice
                 fallbackuri: forward:/productServiceFallBack
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 1
+        - id: paymentservice
+          uri: lb://paymentservice
+          predicates:
+            - Path=/payments/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: paymentservice
+                fallbackuri: forward:/paymentServiceFallBack
             - name: RequestRateLimiter
               args:
                 redis-rate-limiter.replenishRate: 1

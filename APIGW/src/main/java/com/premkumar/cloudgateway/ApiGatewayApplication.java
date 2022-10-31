@@ -30,8 +30,8 @@ public class ApiGatewayApplication {
                 id -> new Resilience4JConfigBuilder(id)
                         .circuitBreakerConfig(
                                 CircuitBreakerConfig.ofDefaults()
-                        )
-                        .build()
+
+                        ).build()
         );
     }
 }

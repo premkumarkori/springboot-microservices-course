@@ -1,5 +1,6 @@
 package com.premkumar.cloudgateway.controller;
 
+
 import com.premkumar.cloudgateway.model.AuthenticationResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,8 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> login(
             @AuthenticationPrincipal OidcUser oidcUser,
             Model model,
-            @RegisteredOAuth2AuthorizedClient("okta") OAuth2AuthorizedClient client
+            @RegisteredOAuth2AuthorizedClient("okta")
+                    OAuth2AuthorizedClient client
     ) {
         AuthenticationResponse authenticationResponse
                 = AuthenticationResponse.builder()
@@ -37,6 +39,5 @@ public class AuthenticationController {
                         .collect(Collectors.toList()))
                 .build();
         return new ResponseEntity<>(authenticationResponse, HttpStatus.OK);
-
     }
 }
