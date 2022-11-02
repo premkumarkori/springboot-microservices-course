@@ -41,16 +41,16 @@ public class OrderServiceImpl implements OrderService {
 
         log.info("Creating Order with Status CREATED");
         Order order = Order.builder()
-                .orderDate(Instant.now())
+                .amount(orderRequest.getTotalAmount())
                 .orderStatus("CREATED")
                 .productId(orderRequest.getProductId())
+                .orderDate(Instant.now())
                 .quantity(orderRequest.getQuantity())
-                .amount(orderRequest.getTotalAmount())
                 .build();
-        orderRepository.save(order);
+
+        order = orderRepository.save(order);
 
         log.info("Calling Payment Service to complete the payment");
-
         PaymentRequest paymentRequest
                 = PaymentRequest.builder()
                 .orderId(order.getId())
@@ -59,8 +59,6 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         String orderStatus;
-
-
         try {
             paymentClient.doPayment(paymentRequest);
             log.info("Payment done Successfully. Changing the Oder status to PLACED");
@@ -71,7 +69,6 @@ public class OrderServiceImpl implements OrderService {
         }
 
         order.setOrderStatus(orderStatus);
-
         orderRepository.save(order);
 
         log.info("Order Places successfully with Order Id: {}", order.getId());

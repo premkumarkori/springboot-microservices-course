@@ -1,11 +1,13 @@
 package com.premkumar.OrderService.service;
 
 import com.premkumar.OrderService.entity.Order;
+import com.premkumar.OrderService.model.OrderRequest;
 import com.premkumar.OrderService.model.OrderResponse;
 import com.premkumar.OrderService.repository.OrderRepository;
 import com.premkumar.clients.exception.CustomException;
 import com.premkumar.clients.paymentservice.PaymentClient;
 import com.premkumar.clients.paymentservice.PaymentMode;
+import com.premkumar.clients.paymentservice.PaymentRequest;
 import com.premkumar.clients.paymentservice.PaymentResponse;
 import com.premkumar.clients.productservice.ProductClient;
 import com.premkumar.clients.productservice.ProductResponse;
@@ -39,7 +41,7 @@ public class OrderServiceImplTest {
 
     @DisplayName("Getting Order Details --Success Scenario")
     @Test
-    void getOrderDetails_When_Order_Success() {
+    void test_When_getOrderDetails_When_Order_Success() {
         //Mocking
         Order order = getMockOrder();
         when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
@@ -63,7 +65,7 @@ public class OrderServiceImplTest {
 
     @DisplayName("Getting Order Details --Failure Scenario")
     @Test
-    void getOrderDetails_NOTFOUND() {
+    void test_When_getOrderDetails_is_NOTFOUND() {
 
         //Mocking
         when(orderRepository.findById(anyLong())).thenReturn(Optional.ofNullable(null));
@@ -78,15 +80,67 @@ public class OrderServiceImplTest {
         verify(orderRepository, times(1)).findById(anyLong());
     }
 
-    private Order getMockOrder() {
 
-        return Order.builder()
-                .id(1)
-                .quantity(200)
-                .amount(1000)
-                .orderDate(Instant.now())
-                .orderStatus("PLACED")
-                .productId(2)
+    @DisplayName("Place Order  --Success Scenario")
+    @Test
+    void test_When_placeOrder_is_Success() {
+
+        Order order = getMockOrder();
+        OrderRequest orderRequest = getMockOrderRequest();
+
+        when(orderRepository.save(any(Order.class)))
+                .thenReturn(order);
+        when(productClient.reduceQuantity(anyLong(), anyLong()))
+                .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        when(paymentClient.doPayment(any(PaymentRequest.class)))
+                .thenReturn(new ResponseEntity<>(HttpStatus.OK));
+
+        long orderId = orderService.placeOrder(orderRequest);
+
+        verify(orderRepository, times(2))
+                .save(any());
+        verify(productClient, times(1))
+                .reduceQuantity(anyLong(), anyLong());
+        verify(paymentClient, times(1))
+                .doPayment(any(PaymentRequest.class));
+
+        assertEquals(order.getId(), orderId);
+    }
+
+    @DisplayName("Place Order  --Payment Failed Scenario")
+    @Test
+    void test_When_placeOrder_Payment_Fails_then_Order_Placed() {
+
+        Order order = getMockOrder();
+        OrderRequest orderRequest = getMockOrderRequest();
+        when(orderRepository.save(any(Order.class))).thenReturn(order);
+        when(productClient.reduceQuantity(anyLong(), anyLong())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        when(paymentClient.doPayment(any(PaymentRequest.class))).thenThrow(new RuntimeException());
+        long orderId = orderService.placeOrder(orderRequest);
+        verify(orderRepository, times(2)).save(any());
+        verify(productClient, times(1)).reduceQuantity(anyLong(), anyLong());
+        verify(paymentClient, times(1)).doPayment(any(PaymentRequest.class));
+
+        assertEquals(order.getId(), orderId);
+    }
+
+    private OrderRequest getMockOrderRequest() {
+        return OrderRequest.builder()
+                .productId(1)
+                .quantity(10)
+                .paymentMode(PaymentMode.CASH)
+                .totalAmount(100)
+                .build();
+    }
+
+    private PaymentResponse getMockPaymentResponse() {
+        return PaymentResponse.builder()
+                .paymentId(1)
+                .paymentDate(Instant.now())
+                .paymentMode(PaymentMode.CASH)
+                .amount(200)
+                .orderId(1)
+                .status("ACCEPTED")
                 .build();
     }
 
@@ -99,14 +153,14 @@ public class OrderServiceImplTest {
                 .build();
     }
 
-    private PaymentResponse getMockPaymentResponse() {
-        return PaymentResponse.builder()
-                .paymentId(1)
-                .paymentDate(Instant.now())
-                .paymentMode(PaymentMode.CASH)
-                .amount(200)
-                .orderId(1)
-                .status("ACCEPTED")
+    private Order getMockOrder() {
+        return Order.builder()
+                .orderStatus("PLACED")
+                .orderDate(Instant.now())
+                .id(1)
+                .amount(100)
+                .quantity(200)
+                .productId(2)
                 .build();
     }
 
