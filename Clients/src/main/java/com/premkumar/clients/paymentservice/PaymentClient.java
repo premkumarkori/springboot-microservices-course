@@ -18,7 +18,7 @@ public interface PaymentClient {
     ResponseEntity<Long> doPayment(@RequestBody PaymentRequest paymentRequest);
 
     @GetMapping("/order/{orderId}")
-    ResponseEntity<PaymentResponse> getOrderDetailsByOrderId(@PathVariable("orderId") String orderId);
+    ResponseEntity<PaymentResponse> getOrderDetailsByOrderId(@PathVariable("orderId") long orderId);
 
     default ResponseEntity<Long> fallback(Exception e) {
         throw new CustomException("Payment Service is not available",

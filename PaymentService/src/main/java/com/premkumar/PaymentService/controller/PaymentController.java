@@ -48,7 +48,7 @@ public class PaymentController {
                     description = "NOT FOUND",
                     content = @Content)
     })
-    public ResponseEntity<PaymentResponse> getOrderDetailsByOrderId(@PathVariable String orderId) {
+    public ResponseEntity<PaymentResponse> getOrderDetailsByOrderId(@PathVariable long orderId) {
 
         PaymentResponse response = paymentService.getPaymentDetailsByOrderId(orderId);
         return new ResponseEntity<>(

@@ -41,11 +41,11 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentResponse getPaymentDetailsByOrderId(String orderId) {
+    public PaymentResponse getPaymentDetailsByOrderId(long orderId) {
         log.info("Getting payment details for the Order Id: {}", orderId);
 
         TransactionDetails transactionDetails
-                = transactionDetailsRepository.findByOrderId(Long.parseLong(orderId))
+                = transactionDetailsRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new PaymentServiceCustomException(
                         "TransactionDetails with given id not found",
                         "TRANSACTION_NOT_FOUND"));

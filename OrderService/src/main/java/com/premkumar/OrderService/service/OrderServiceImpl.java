@@ -10,8 +10,8 @@ import com.premkumar.clients.paymentservice.PaymentRequest;
 import com.premkumar.clients.paymentservice.PaymentResponse;
 import com.premkumar.clients.productservice.ProductClient;
 import com.premkumar.clients.productservice.ProductResponse;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +19,15 @@ import java.time.Instant;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+
 public class OrderServiceImpl implements OrderService {
 
+    @Autowired
     private OrderRepository orderRepository;
-    private final ProductClient productClient;
-    private final PaymentClient paymentClient;
-//    @Autowired
-//
+    @Autowired
+    private ProductClient productClient;
+    @Autowired
+    private PaymentClient paymentClient;
 
     @Override
     public long placeOrder(OrderRequest orderRequest) {
@@ -93,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
         ProductResponse productResponseBody = productResponse.getBody();
 
         log.info("Getting payment information form the payment Service");
-        ResponseEntity<PaymentResponse> paymentResponse = paymentClient.getOrderDetailsByOrderId(String.valueOf(order.getId()));
+        ResponseEntity<PaymentResponse> paymentResponse = paymentClient.getOrderDetailsByOrderId(order.getId());
         PaymentResponse paymentResponseBody = paymentResponse.getBody();
 
         OrderResponse.PaymentDetails paymentDetails = new OrderResponse.PaymentDetails();
