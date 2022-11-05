@@ -38,7 +38,7 @@ public class PaymentController {
         return new ResponseEntity<>(paymentId, HttpStatus.OK);
     }
 
-    @GetMapping("/order/{orderId}")
+    @GetMapping("/orders/{orderId}")
     @Operation(summary = "This is to Get OrderDetails from OrderService from Db")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",

@@ -39,6 +39,7 @@ public class OrderController {
         return new ResponseEntity<>(orderId, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('Admin') || hasAuthority('Customer')")
     @GetMapping("/{orderId}")
     @Operation(summary = "This is to Get OrderDetails from Db")
     @ApiResponses(value = {
