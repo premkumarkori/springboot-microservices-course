@@ -4,7 +4,7 @@ import com.premkumar.PaymentService.model.PaymentRequest;
 import com.premkumar.PaymentService.model.PaymentResponse;
 
 public interface PaymentService {
-    Object doPayment(PaymentRequest paymentRequest);
+    long doPayment(PaymentRequest paymentRequest);
 
     PaymentResponse getPaymentDetailsByOrderId(long orderId);
 }

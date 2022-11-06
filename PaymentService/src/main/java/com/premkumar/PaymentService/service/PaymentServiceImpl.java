@@ -6,21 +6,21 @@ import com.premkumar.PaymentService.model.PaymentMode;
 import com.premkumar.PaymentService.model.PaymentRequest;
 import com.premkumar.PaymentService.model.PaymentResponse;
 import com.premkumar.PaymentService.repository.TransactionDetailsRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
 @Service
-@AllArgsConstructor
 @Slf4j
 public class PaymentServiceImpl implements PaymentService {
 
-    private final TransactionDetailsRepository transactionDetailsRepository;
+    @Autowired
+    private TransactionDetailsRepository transactionDetailsRepository;
 
     @Override
-    public Object doPayment(PaymentRequest paymentRequest) {
+    public long doPayment(PaymentRequest paymentRequest) {
 
         log.info("Recording Payment Details: {}", paymentRequest);
         TransactionDetails transactionDetails
@@ -28,12 +28,12 @@ public class PaymentServiceImpl implements PaymentService {
                 .orderId(paymentRequest.getOrderId())
                 .paymentDate(Instant.now())
                 .paymentMode(paymentRequest.getPaymentMode().name())
-                .paymentStatus("SUCESS")
+                .paymentStatus("SUCCESS")
                 .referenceNumber(paymentRequest.getReferenceNumber())
                 .amount(paymentRequest.getAmount())
                 .build();
 
-        transactionDetailsRepository.save(transactionDetails);
+        transactionDetails = transactionDetailsRepository.save(transactionDetails);
 
         log.info("Transaction Completed with Id: {}", transactionDetails.getId());
 
@@ -59,6 +59,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .paymentMode(PaymentMode.valueOf(transactionDetails.getPaymentMode()))
                 .status(transactionDetails.getPaymentStatus())
                 .build();
+        log.info("Getting payment response for the Order Id: {}", paymentResponse);
         return paymentResponse;
     }
 }
