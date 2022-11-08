@@ -29,8 +29,8 @@ public class ProductController {
             @ApiResponse(responseCode = "200",
                     description = "Stored All the Products into Db",
                     content = {@Content(mediaType = "application/json")}),
-            @ApiResponse(responseCode = "404",
-                    description = "Not Available",
+            @ApiResponse(responseCode = "403",
+                    description = "Forbidden",
                     content = @Content)
     })
     public ResponseEntity<Long> addProduct(@RequestBody ProductRequest productRequest) {
@@ -56,6 +56,7 @@ public class ProductController {
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
     @DeleteMapping("/{id}")
     @Operation(summary = "This is to Delete Products in Db By Admin")
     @ApiResponses(value = {

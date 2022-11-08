@@ -5,33 +5,33 @@ import com.premkumar.ProductService.exception.ProductServiceCustomException;
 import com.premkumar.ProductService.model.ProductRequest;
 import com.premkumar.ProductService.model.ProductResponse;
 import com.premkumar.ProductService.repository.ProductRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static org.springframework.beans.BeanUtils.copyProperties;
 
 @Service
 @Slf4j
-@AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
+    @Autowired
     private ProductRepository productRepository;
 
     private static final String PRODUCT_NOT_FOUND = "PRODUCT_NOT_FOUND";
 
     @Override
     public long addProduct(ProductRequest productRequest) {
-        log.info("Adding Product..");
+        log.info("Adding Product..{}", productRequest);
 
         Product product = Product.builder()
                 .productName(productRequest.getName())
                 .quantity(productRequest.getQuantity())
                 .price(productRequest.getPrice())
                 .build();
-        productRepository.save(product);
+        product = productRepository.save(product);
 
-        log.info("Product Created....");
+        log.info("Product Created....{}", product);
         return product.getProductId();
     }
 
@@ -48,16 +48,22 @@ public class ProductServiceImpl implements ProductService {
 
         ProductResponse productResponse = new ProductResponse();
         copyProperties(product, productResponse);
+
+        log.info("Product Response for productId: {}", productResponse);
         return productResponse;
     }
 
     @Override
     public void deleteProductById(long productId) {
+        log.info("Product id: {}", productId);
+
         if (!productRepository.existsById(productId)) {
+            log.info("Im in this loop {}", !productRepository.existsById(productId));
             throw new ProductServiceCustomException(
                     "Product with given with id: " + productId + " not found:",
                     PRODUCT_NOT_FOUND);
         }
+        log.info("Deleting Product with id: {}", productId);
         productRepository.deleteById(productId);
 
     }
@@ -72,6 +78,7 @@ public class ProductServiceImpl implements ProductService {
                         "Product with given Id not found",
                         PRODUCT_NOT_FOUND
                 ));
+        log.info(" Product Details:{}", product);
         if (product.getQuantity() < quantity) {
             throw new ProductServiceCustomException(
                     "Product does not have sufficient Quantity",
@@ -82,6 +89,7 @@ public class ProductServiceImpl implements ProductService {
         product.setQuantity(product.getQuantity() - quantity);
         productRepository.save(product);
         log.info("Product Quantity updated Successfully");
+        log.info("Updated Product Details:{}", product.getQuantity());
     }
 
 
