@@ -51,6 +51,7 @@ public class ProductController {
                     content = @Content)
     })
     public ResponseEntity<ProductResponse> getProductById(@PathVariable("id") long productId) {
+        log.info("productId: {}", productId);
         ProductResponse productResponse
                 = productService.getProductById(productId);
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
@@ -63,8 +64,11 @@ public class ProductController {
             @ApiResponse(responseCode = "200",
                     description = "Delete the Products By Id from Db",
                     content = {@Content(mediaType = "application/json")}),
-            @ApiResponse(responseCode = "500",
-                    description = "Product Not Available",
+            @ApiResponse(responseCode = "404",
+                    description = "Product Not Found",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "Forbidden",
                     content = @Content)
     })
     public void deleteProductById(@PathVariable("id") long productId) {
