@@ -1,0 +1,125 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: premkumar
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - spring
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - spring
+#  eureka-server:
+#    image: koripremkumar/eureka-server:latest
+#    container_name: eureka-server
+#    ports:
+#      - "8761:8761"
+#    environment:
+#        - SPRING_PROFILES_ACTIVE=docker
+#    networks:
+#      - spring
+#  apigw:
+#    image: koripremkumar/apigw:latest
+#    container_name: apigw
+#    ports:
+#      - "9090:9090"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    networks:
+#      - spring
+#    depends_on:
+#     configserver:
+#      condition: service_healthy
+#  orderservice:
+#    image: koripremkumar/orderservice:latest
+#    container_name: orderservice
+#    ports:
+#      - "8082:8082"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    networks:
+#      - spring
+#      - postgres
+#    depends_on:
+#      - postgres
+#  paymentservice:
+#    image: koripremkumar/paymentservice:latest
+#    container_name: paymentservice
+#    ports:
+#      - "8081:8081"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    networks:
+#      - spring
+#      - postgres
+#    depends_on:
+#      - postgres
+#  productservice:
+#    image: koripremkumar/productservice:latest
+#    container_name: productservice
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    networks:
+#      - spring
+#      - postgres
+#    depends_on:
+#      - postgres
+#  configserver:
+#    image: koripremkumar/configserver:latest
+#    container_name: configserver
+#    ports:
+#      - "9296:9296"
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=docker
+#    networks:
+#      - spring
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://configserver:9296/actuator/health" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#    depends_on:
+#      - eureka-server
+networks:
+  spring:
+    driver: bridge
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:

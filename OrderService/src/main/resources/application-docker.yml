@@ -5,7 +5,7 @@ spring:
   application:
     name: orderservice
   datasource:
-    url: jdbc:postgresql://localhost:5432/orderdb
+    url: jdbc:postgresql://postgres:5432/orderdb
     username: premkumar
     password: password
   jpa:
@@ -16,8 +16,8 @@ spring:
       show-sql: true
     hibernate:
       ddl-auto: update
-  #  config:
-  #    import: optional:http://configserver:9296/
+  config:
+    import: http://configserver:9296/
   security:
     oauth2:
       resourceserver:
@@ -35,11 +35,11 @@ spring:
           okta:
             issuer-uri: https://dev-21709836.okta.com/oauth2/default
 
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    fetch-registry: true
-    register-with-eureka: true
-    service-url:
-      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
