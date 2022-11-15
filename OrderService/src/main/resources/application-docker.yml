@@ -1,0 +1,45 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: orderservice
+  datasource:
+    url: jdbc:postgresql://postgres:5432/orderdb
+    username: premkumar
+    password: password
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+      show-sql: true
+    hibernate:
+      ddl-auto: update
+  config:
+    import: http://configserver:9296/
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-21709836.okta.com/oauth2/default
+      client:
+        registration:
+          internal-client:
+            provider: okta
+            authorization-grant-type: client_credentials
+            scope: internal
+            client-id: 0oa6vjkmae9r9nz3b5d7
+            client-secret: UZ-iL8a08c056JKZwhoDQ1kxAECbdWuQdm1ttzCv
+        provider:
+          okta:
+            issuer-uri: https://dev-21709836.okta.com/oauth2/default
+
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}

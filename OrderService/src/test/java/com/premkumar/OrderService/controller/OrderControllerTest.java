@@ -125,7 +125,7 @@ public class OrderControllerTest {
 
     @Test
     @DisplayName("Place Order -- Success Scenario")
-    void test_When_placeOrder_DoPayment_Success() throws Exception {
+    void Test_1_When_placeOrder_DoPayment_Success() throws Exception {
         //Place Order
         //Get Order By Order Id from Db and check
         //Check output
@@ -154,7 +154,7 @@ public class OrderControllerTest {
 
     @Test
     @DisplayName("Place Order -- Failure Scenario")
-    public void test_When_placeOrder_WithWrongAccess_thenThrow_403() throws Exception {
+    public void Test_2_When_placeOrder_WithWrongAccess_thenThrow_403() throws Exception {
 
 
         OrderRequest orderRequest = getMockOrderRequest();
@@ -170,7 +170,7 @@ public class OrderControllerTest {
 
     @Test
     @DisplayName("Get Order -- Success Scenario")
-    public void test_When_getOrderDetails_isSuccess() throws Exception {
+    public void Test_3_When_getOrderDetails_isSuccess() throws Exception {
         MvcResult mvcResult
                 = mockMvc.perform(MockMvcRequestBuilders.get("/orders/1")
                         .with(jwt().authorities(new SimpleGrantedAuthority("Admin")))
@@ -186,7 +186,7 @@ public class OrderControllerTest {
 
     @Test
     @DisplayName("Get Order -- Failure Scenario")
-    public void test_When_getOrderDetails_Not_Found() throws Exception {
+    public void Test_4_When_getOrderDetails_Not_Found() throws Exception {
         MvcResult mvcResult
                 = mockMvc.perform(MockMvcRequestBuilders.get("/orders/2")
                         .with(jwt().authorities(new SimpleGrantedAuthority("Admin")))
