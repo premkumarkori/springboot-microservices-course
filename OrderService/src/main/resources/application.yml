@@ -5,12 +5,15 @@ spring:
   application:
     name: orderservice
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:3306/orderdb
-    username: root
-    password: password@123
-    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:postgresql://localhost:5432/orderdb
+    username: premkumar
+    password: password
   jpa:
-    database-platform: org.hibernate.dialect.MySQL57InnoDBDialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+      show-sql: true
     hibernate:
       ddl-auto: update
   config:
